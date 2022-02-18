@@ -39,11 +39,6 @@
 	};
 
 	onMount(() => {
-		fetch('https://discord.com')
-			.then((result) => result.text())
-			.then((html) => {
-				console.log(html);
-			});
 		document.onpaste = async function () {
 			const IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
 
