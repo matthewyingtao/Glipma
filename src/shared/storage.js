@@ -1,9 +1,17 @@
-import { readDir, BaseDirectory, createDir, writeFile, readTextFile } from '@tauri-apps/api/fs';
+import {
+	readDir,
+	BaseDirectory,
+	createDir,
+	writeFile,
+	readTextFile,
+	writeBinaryFile
+} from '@tauri-apps/api/fs';
+import { nanoid } from 'nanoid';
 
 const dataFileName = 'data.json';
 const dir = BaseDirectory.Desktop;
 
-const checkDataFolder = async () => {
+const _checkDataFolder = async () => {
 	try {
 		const files = await readDir('data', {
 			dir: dir
@@ -17,7 +25,7 @@ const checkDataFolder = async () => {
 	}
 };
 
-const createDatabase = async () => {
+const _createDatabase = async () => {
 	try {
 		await createDir('data', {
 			dir: dir,
@@ -39,10 +47,10 @@ const createDatabase = async () => {
 };
 
 export const initStorage = async () => {
-	const hasDataFolder = await checkDataFolder();
+	const hasDataFolder = await _checkDataFolder();
 
 	if (!hasDataFolder) {
-		await createDatabase();
+		await _createDatabase();
 	}
 };
 
@@ -56,6 +64,22 @@ export const getStoredPosts = async () => {
 		return [];
 	}
 };
+
+// export const saveImage = async (blob, extension) => {
+// 	const fileType = blob.type;
+
+// 	const bin = await blobToBinary(blob);
+
+// 	await writeBinaryFile(
+// 		{
+// 			contents: bin,
+// 			path: `./data/${nanoid()}.${extension}`
+// 		},
+// 		{
+// 			dir: dir
+// 		}
+// 	);
+// };
 
 export const saveState = async (data) => {
 	await writeFile(

@@ -1,4 +1,4 @@
-import App from './routes/App.svelte';
+import App from './App.svelte';
 import { initStorage } from './shared/storage';
 
 initStorage();

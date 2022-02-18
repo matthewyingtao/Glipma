@@ -5,12 +5,18 @@
 	"scripts": {
 		"build": "rollup -c",
 		"dev": "rollup -c -w",
-		"start": "sirv public --no-clear --port 8080"
+		"start": "sirv public --no-clear --port 8080",
+		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
+		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. ."
 	},
 	"devDependencies": {
 		"@rollup/plugin-commonjs": "^17.0.0",
 		"@rollup/plugin-node-resolve": "^11.0.0",
 		"@tauri-apps/cli": "^1.0.0-rc.4",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-svelte3": "^3.4.0",
+		"prettier": "^2.5.1",
+		"prettier-plugin-svelte": "^2.6.0",
 		"rollup": "^2.3.4",
 		"rollup-plugin-css-only": "^3.1.0",
 		"rollup-plugin-livereload": "^2.0.0",
@@ -20,6 +26,9 @@
 	},
 	"dependencies": {
 		"@tauri-apps/api": "^1.0.0-rc.1",
-		"sirv-cli": "^2.0.0"
+		"lodash": "^4.17.21",
+		"nanoid": "^3.3.1",
+		"sirv-cli": "^2.0.0",
+		"svelte-spa-router": "^3.2.0"
 	}
 }
