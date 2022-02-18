@@ -39,6 +39,11 @@
 	};
 
 	onMount(() => {
+		fetch('https://discord.com')
+			.then((result) => result.text())
+			.then((html) => {
+				console.log(html);
+			});
 		document.onpaste = async function () {
 			const IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
 
@@ -89,7 +94,7 @@
 
 <span>{error}</span>
 
-<input type="text" bind:value={pastedData.notes} />
+<input type="text" bind:value={pastedData.notes} placeholder="Anything you'd like to add?" />
 
 <button
 	title={pastedData.data === '' ? 'Input something first!' : 'Add to notes'}
@@ -108,5 +113,10 @@
 		display: block;
 		margin-left: auto;
 		margin-top: 1rem;
+	}
+
+	input[type='text'] {
+		width: 100%;
+		resize: none;
 	}
 </style>
