@@ -6,7 +6,10 @@ import {
 	readTextFile,
 	writeBinaryFile
 } from '@tauri-apps/api/fs';
+import { desktopDir, join, normalize } from '@tauri-apps/api/path';
+import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { nanoid } from 'nanoid';
+import { blobToBinary } from './utils';
 
 const dataFileName = 'data.json';
 const dir = BaseDirectory.Desktop;
@@ -65,21 +68,24 @@ export const getStoredPosts = async () => {
 	}
 };
 
-// export const saveImage = async (blob, extension) => {
-// 	const fileType = blob.type;
+export const saveImage = async (blob, extension) => {
+	const desktopPath = await desktopDir();
+	const bin = await blobToBinary(blob);
 
-// 	const bin = await blobToBinary(blob);
+	const fileName = `${nanoid()}.${extension}`;
 
-// 	await writeBinaryFile(
-// 		{
-// 			contents: bin,
-// 			path: `./data/${nanoid()}.${extension}`
-// 		},
-// 		{
-// 			dir: dir
-// 		}
-// 	);
-// };
+	await writeBinaryFile(
+		{
+			contents: bin,
+			path: `./data/${fileName}`
+		},
+		{
+			dir: dir
+		}
+	);
+
+	return convertFileSrc(await join(desktopPath, 'data', fileName));
+};
 
 export const saveState = async (data) => {
 	await writeFile(

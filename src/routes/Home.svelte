@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { notes } from '../shared/store.js';
 	import { intersection } from 'lodash';
+	import { saveImage } from '../shared/storage';
 
 	let pastedData = {
 		type: 'text',
@@ -38,8 +39,6 @@
 
 			const pasted = res[0];
 
-			console.log(pasted);
-
 			const hasImage = intersection(pasted.types, imageTypes).length > 0;
 
 			if (hasImage) {
@@ -55,8 +54,13 @@
 					data: URL.createObjectURL(blob)
 				};
 
-				// // then save to file system
-				// saveImage(blob, extension);
+				// then save to file system
+				const imagePath = await saveImage(blob, extension);
+
+				pastedData = {
+					type: 'image',
+					data: imagePath
+				};
 			} else {
 				pastedData = {
 					type: 'text',
