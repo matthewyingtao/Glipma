@@ -3,12 +3,12 @@ import { getStoredPosts, saveState } from './storage';
 
 export const notes = writable([]);
 
-notes.subscribe((val) => {
-	console.log(val);
-	saveState(JSON.stringify(val));
+getStoredPosts().then((res) => {
+	notes.set(res);
 });
 
-const storedPosts = getStoredPosts().then((res) => {
-	console.log(res);
-	notes.set(res);
+notes.subscribe((val) => {
+	if (val.length !== 0) {
+		saveState(JSON.stringify(val));
+	}
 });

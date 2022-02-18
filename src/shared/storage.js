@@ -18,26 +18,28 @@ const checkDataFolder = async () => {
 };
 
 const createDatabase = async () => {
-	await createDir('data', {
-		dir: dir,
-		recursive: true
-	});
+	try {
+		await createDir('data', {
+			dir: dir,
+			recursive: true
+		});
 
-	await writeFile(
-		{
-			contents: '[]',
-			path: `./data/${dataFileName}`
-		},
-		{
-			dir: dir
-		}
-	);
+		await writeFile(
+			{
+				contents: '[]',
+				path: `./data/${dataFileName}`
+			},
+			{
+				dir: dir
+			}
+		);
+	} catch (e) {
+		console.log(e);
+	}
 };
 
 export const initStorage = async () => {
 	const hasDataFolder = await checkDataFolder();
-
-	console.log(hasDataFolder);
 
 	if (!hasDataFolder) {
 		await createDatabase();
@@ -45,11 +47,14 @@ export const initStorage = async () => {
 };
 
 export const getStoredPosts = async () => {
-	const res = await readTextFile(`data/${dataFileName}`, {
-		dir: dir
-	});
-
-	return JSON.parse(res);
+	try {
+		const res = await readTextFile(`data/${dataFileName}`, {
+			dir: dir
+		});
+		return JSON.parse(res);
+	} catch (e) {
+		return [];
+	}
 };
 
 export const saveState = async (data) => {

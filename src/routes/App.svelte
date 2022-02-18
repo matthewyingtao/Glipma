@@ -27,6 +27,10 @@
 	};
 
 	const addToNotes = (val) => {
+		if (!val) {
+			return;
+		}
+
 		$notes = [...$notes, val];
 	};
 </script>
