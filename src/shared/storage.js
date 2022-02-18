@@ -6,7 +6,7 @@ import {
 	readTextFile,
 	writeBinaryFile
 } from '@tauri-apps/api/fs';
-import { desktopDir, join, normalize } from '@tauri-apps/api/path';
+import { desktopDir, join } from '@tauri-apps/api/path';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { nanoid } from 'nanoid';
 import { blobToBinary } from './utils';

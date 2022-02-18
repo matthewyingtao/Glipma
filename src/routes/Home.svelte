@@ -6,12 +6,11 @@
 
 	let pastedData = {
 		type: 'text',
-		data: ''
+		data: '',
+		notes: ''
 	};
 
 	let error = '';
-
-	const imageTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
 
 	const addToNotes = (val) => {
 		if (!val) {
@@ -20,51 +19,60 @@
 
 		pastedData = {
 			type: 'text',
-			data: ''
+			data: '',
+			notes: ''
 		};
 
 		$notes = [...$notes, val];
 	};
 
+	const getClipboardData = async () => {
+		let res;
+
+		try {
+			res = await navigator.clipboard.read();
+		} catch (e) {
+			return;
+		}
+
+		return res[0];
+	};
+
 	onMount(() => {
 		document.onpaste = async function () {
-			let res;
+			const IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
 
-			try {
-				res = await navigator.clipboard.read();
-			} catch (e) {
+			const pasted = await getClipboardData();
+
+			if (!pasted) {
 				error = "You don't have any data in clipboard.";
 				return;
 			}
 
-			const pasted = res[0];
+			const isImage = intersection(pasted.types, IMAGE_TYPES).length > 0;
 
-			const hasImage = intersection(pasted.types, imageTypes).length > 0;
-
-			if (hasImage) {
-				const imageType = pasted.types.find((type) => imageTypes.includes(type));
+			if (isImage) {
+				const imageType = pasted.types.find((type) => IMAGE_TYPES.includes(type));
 
 				const blob = await pasted.getType(imageType);
-
-				const extension = imageType.split('/')[1];
-
-				// first display the blob
-				pastedData = {
-					type: 'image',
-					data: URL.createObjectURL(blob)
-				};
+				// get the image extension
+				const fileExtension = imageType.split('/')[1];
 
 				// then save to file system
-				const imagePath = await saveImage(blob, extension);
+				const imagePath = await saveImage(blob, fileExtension);
 
 				pastedData = {
+					...pastedData,
 					type: 'image',
 					data: imagePath
 				};
 			} else {
+				const blob = await pasted.getType('text/plain');
+
 				pastedData = {
+					...pastedData,
 					type: 'text',
-					data: pasted.getData('text/plain')
+					data: await blob.text()
 				};
 			}
 		};
@@ -80,6 +88,8 @@
 {/if}
 
 <span>{error}</span>
+
+<input type="text" bind:value={pastedData.notes} />
 
 <button
 	title={pastedData.data === '' ? 'Input something first!' : 'Add to notes'}

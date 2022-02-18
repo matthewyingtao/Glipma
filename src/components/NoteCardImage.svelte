@@ -5,8 +5,6 @@
 </script>
 
 <div>
-	<pre>
-		{data}
-	</pre>
+	<img src={data} alt="" />
 	<h2>{notes}</h2>
 </div>
